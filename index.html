@@ -578,7 +578,7 @@
         <!-- ==================== LEADERBOARD TAB ==================== -->
         <section id="section-leaderboard" class="hidden">
             <div class="bg-white rounded-xl shadow-xl overflow-hidden max-w-4xl mx-auto border border-gray-200">
-                <div class="bg-tapis-red p-6 text-center tapis-border">
+                <div class="bg-tapis-red p-6 text-center tapis-border relative">
                     <h2 class="text-3xl font-serif font-bold text-tapis-gold">Papan Peringkat</h2>
                     <p class="text-white opacity-80 mt-2">Daftar nilai tertinggi pahlawan Aksara Lampung.</p>
                 </div>
@@ -769,13 +769,8 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'lampung-kuis-app-123';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        let auth, db, user;
+        // TEMPELKAN URL APPS SCRIPT ANDA DI SINI
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwnwMoX7SKh62psRa4zIcwk4vfik4iu7quH4qC-vRFR7Tc4rL9ha9o2tSUdllz0Q7MR/exec';
         
         let questions = [];
         let leaderboard = [];
@@ -991,8 +986,39 @@
             const q = questions[currentQuestionIndex];
             if (!q) return;
 
-            const userKeys = currentAnswer.map(item => item.id);
-            const isCorrect = JSON.stringify(userKeys) === JSON.stringify(q.answer);
+            const userSyls = groupTilesIntoSyllables(currentAnswer);
+            const correctTiles = q.answer.map(id => findAksaraById(id));
+            const correctSyls = groupTilesIntoSyllables(correctTiles);
+            
+            let isCorrect = true;
+            if (userSyls.length !== correctSyls.length) {
+                isCorrect = false;
+            } else {
+                for (let i = 0; i < userSyls.length; i++) {
+                    const u = userSyls[i];
+                    const c = correctSyls[i];
+                    
+                    if (u.isSpace !== c.isSpace) {
+                        isCorrect = false; break;
+                    }
+                    if (!u.isSpace) {
+                        const uIndukId = u.induk ? u.induk.id : null;
+                        const cIndukId = c.induk ? c.induk.id : null;
+                        const uAtasId = u.atas ? u.atas.id : null;
+                        const cAtasId = c.atas ? c.atas.id : null;
+                        const uBawahId = u.bawah ? u.bawah.id : null;
+                        const cBawahId = c.bawah ? c.bawah.id : null;
+                        const uSampingId = u.samping ? u.samping.id : null;
+                        const cSampingId = c.samping ? c.samping.id : null;
+                        
+                        // Periksa komponen aksara di masing-masing posisi
+                        if (uIndukId !== cIndukId || uAtasId !== cAtasId || uBawahId !== cBawahId || uSampingId !== cSampingId) {
+                            isCorrect = false;
+                            break;
+                        }
+                    }
+                }
+            }
 
             if (isCorrect) {
                 currentUser.score += 20;
@@ -1164,47 +1190,6 @@
             return { id, label: id, type: 'induk', isSpace: false };
         }
 
-        function setupRealtimeListeners() {
-            if (!user) return;
-            
-            const qRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
-            onSnapshot(qRef, (snapshot) => {
-                questions = [];
-                snapshot.forEach(doc => {
-                    questions.push({ id: doc.id, ...doc.data() });
-                });
-                
-                if (questions.length === 0) {
-                    questions = [...defaultQuestions];
-                }
-                
-                renderAdminQuestionList();
-            }, (err) => {
-                console.error("Error fetching questions: ", err);
-            });
-
-            const lRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-            onSnapshot(lRef, (snapshot) => {
-                leaderboard = [];
-                snapshot.forEach(doc => {
-                    leaderboard.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Sort by highest score first; if equal score, sort by lowest time
-                leaderboard.sort((a, b) => {
-                    if (b.score !== a.score) {
-                        return b.score - a.score;
-                    }
-                    return (a.timeSeconds || 999999) - (b.timeSeconds || 999999);
-                });
-
-                renderLeaderboard();
-                renderAdminLeaderboard();
-            }, (err) => {
-                console.error("Error fetching leaderboard: ", err);
-            });
-        }
-
         function getItemType(id) {
             for (const cat in aksaraData) {
                 const found = aksaraData[cat].find(i => i.id === id);
@@ -1249,7 +1234,8 @@
 
         window.switchTab = function(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
+            const activeTabBtn = document.getElementById(`tab-${tab}`);
+            if (activeTabBtn) activeTabBtn.classList.add('active');
             
             document.getElementById('section-quiz').classList.add('hidden');
             document.getElementById('section-leaderboard').classList.add('hidden');
@@ -1312,7 +1298,7 @@
 
             renderReportQuestionList();
 
-            // Otomatis Simpan Hasil ke Papan Peringkat (Firestore / In-Memory)
+            // Persiapkan Data Peringkat
             const resultEntry = {
                 name: currentUser.name,
                 score: currentUser.score,
@@ -1322,24 +1308,48 @@
                 date: new Date().toISOString()
             };
 
-            try {
-                if (db && user) {
-                    const lRef = collection(db, 'artifacts', appId, 'public', 'data', 'leaderboard');
-                    await addDoc(lRef, resultEntry);
-                } else {
-                    leaderboard.push(resultEntry);
-                    // Urutkan: Skor tertinggi dulu, lalu waktu tercepat
-                    leaderboard.sort((a, b) => {
-                        if (b.score !== a.score) return b.score - a.score;
-                        return (a.timeSeconds || 0) - (b.timeSeconds || 0);
+            // Kirim ke Google Sheets
+            if (GOOGLE_SHEETS_URL !== 'URL_GOOGLE_APP_SCRIPT_ANDA_DISINI') {
+                try {
+                    await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // Mencegah blokir keamanan dari browser ke Google
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(resultEntry)
                     });
-                    renderLeaderboard();
-                    renderAdminLeaderboard();
+                    // Segarkan peringkat setelah pengiriman
+                    fetchLeaderboard();
+                } catch (err) {
+                    console.error("Gagal menyimpan peringkat ke Google Sheets:", err);
                 }
-            } catch (err) {
-                console.error("Gagal menyimpan peringkat otomatis:", err);
+            } else {
+                leaderboard.push(resultEntry);
+                sortAndRenderLeaderboard();
             }
         };
+
+        function sortAndRenderLeaderboard() {
+            leaderboard.sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return (a.timeSeconds || 0) - (b.timeSeconds || 0);
+            });
+            renderLeaderboard();
+            renderAdminLeaderboard();
+        }
+
+        async function fetchLeaderboard() {
+            if (GOOGLE_SHEETS_URL === 'URL_GOOGLE_APP_SCRIPT_ANDA_DISINI') return;
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL);
+                const data = await response.json();
+                if (data && Array.isArray(data)) {
+                    leaderboard = data;
+                    sortAndRenderLeaderboard();
+                }
+            } catch(e) {
+                console.error("Gagal mengambil data peringkat dari Google Sheets:", e);
+            }
+        }
 
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboard-body');
@@ -1348,7 +1358,7 @@
                 return;
             }
 
-            tbody.innerHTML = leaderboard.slice(0, 50).map((entry, index) => {
+            tbody.innerHTML = leaderboard.map((entry, index) => {
                 let rankBadge = `<span class="font-bold text-gray-600">${index + 1}</span>`;
                 if (index === 0) rankBadge = `<i class="fa-solid fa-medal text-2xl text-yellow-400"></i>`;
                 else if (index === 1) rankBadge = `<i class="fa-solid fa-medal text-2xl text-gray-400"></i>`;
@@ -1584,13 +1594,8 @@
             };
 
             try {
-                if (db && user) {
-                    const qRef = collection(db, 'artifacts', appId, 'public', 'data', 'questions');
-                    await addDoc(qRef, newQ);
-                } else {
-                    questions.push(newQ);
-                    renderAdminQuestionList();
-                }
+                questions.push(newQ);
+                renderAdminQuestionList();
 
                 document.getElementById('admin-q-text').value = '';
                 adminClearBoard();
@@ -1604,38 +1609,13 @@
         window.deleteQuestion = async function(qIdentifier) {
             if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return;
 
-            try {
-                if (db && user) {
-                    const qDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'questions', qIdentifier);
-                    await deleteDoc(qDocRef);
-                } else {
-                    questions = questions.filter(q => (q.id || q.text) !== qIdentifier);
-                    renderAdminQuestionList();
-                }
-                showModal("Berhasil", "Soal telah dihapus.", "success");
-            } catch (err) {
-                console.error("Error deleting question:", err);
-                showModal("Gagal", "Gagal menghapus soal.", "error");
-            }
+            questions = questions.filter(q => (q.id || q.text) !== qIdentifier);
+            renderAdminQuestionList();
+            showModal("Berhasil", "Soal telah dihapus secara lokal.", "success");
         };
 
         window.deleteLeaderboardEntry = async function(id) {
-            if (!confirm("Apakah Anda yakin ingin menghapus data peringkat ini?")) return;
-
-            try {
-                if (db && user) {
-                    const lDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leaderboard', id);
-                    await deleteDoc(lDocRef);
-                } else {
-                    leaderboard = leaderboard.filter(item => item.id !== id);
-                    renderLeaderboard();
-                    renderAdminLeaderboard();
-                }
-                showModal("Berhasil", "Data peringkat dihapus.", "success");
-            } catch (err) {
-                console.error("Error deleting leaderboard entry:", err);
-                showModal("Gagal", "Gagal menghapus data.", "error");
-            }
+            showModal("Informasi", "Karena peringkat menggunakan Google Sheets, silakan hapus baris nama peserta secara manual dari file Google Sheets Anda untuk menghapusnya.", "info");
         };
 
         let modalActionCallback = null;
@@ -1695,32 +1675,15 @@
                  .replace(/'/g, "&#039;");
         }
 
-        async function initFirebase() {
-            try {
-                if (firebaseConfig && firebaseConfig.apiKey) {
-                    const app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-                    
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    user = auth.currentUser;
-                    setupRealtimeListeners();
-                } else {
-                    questions = [...defaultQuestions];
-                }
-            } catch (error) {
-                console.warn("Firebase initialization skipped or failed:", error);
-                questions = [...defaultQuestions];
-            }
+        function setupRealtimeListeners() {
+            questions = [...defaultQuestions];
+            renderAdminQuestionList();
+            fetchLeaderboard(); // Panggil data dari G-Sheets
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             initKeyboard();
-            initFirebase();
+            setupRealtimeListeners();
         });
 
     </script>
