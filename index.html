@@ -1148,8 +1148,8 @@
                 { id: 'Gha', label: 'Gha', type: 'induk', imgId: '16f_YC5JipHRAnVjbTs9DCxGywRcZm8bh' }
             ],
             atas: [
-                { id: 'Ulan-i', label: 'Ulan (i)', type: 'atas', imgId: '1M_EbC5733X1wNkBqpDmzivG9Ca_7Qkr_' },
-                { id: 'Ulan-e', label: 'Ulan (e)', type: 'atas', imgId: '1SzFOInUapDB7rMeE8a48FBg-Cic4CvxE' },
+                { id: 'Ulan-i', label: 'Ulan (i)', type: 'atas', imgId: '1SzFOInUapDB7rMeE8a48FBg-Cic4CvxE' },
+                { id: 'Ulan-e', label: 'Ulan (e)', type: 'atas', imgId: '1M_EbC5733X1wNkBqpDmzivG9Ca_7Qkr_' },
                 { id: 'Bicek-e', label: 'Bicek (ĕ)', type: 'atas', imgId: '1KCTZ575FweM8MT_tAxJVsb77RFEJdCTg' },
                 { id: 'Tekelubang-ng', label: 'Tekelubang (ng)', type: 'atas', imgId: '1WsrIpNJFpZDmZ_i4xi6mL6jSaqXUSjUl' },
                 { id: 'Rejenjung-r', label: 'Rejenjung (r)', type: 'atas', imgId: '1eutu-auEoKLwhKCuP8DelrmIyZlVOR2_' },
@@ -1210,7 +1210,7 @@
 
             const createAdminBtn = (item) => {
                 return `<button onclick="addTileToAdminBoard('${item.id}', '${item.label}', '${item.imgId}', '${item.type}')" 
-                        class="bg-white border border-gray-300 rounded p-1 hover:bg-gray-100 m-1 h-10 w-10 flex justify-center items-center" title="${item.label}">
+                        class="bg-white border border-gray-300 rounded p-1 hover:bg-gray-100 m-1 h-10 w-10 flex justify-center items-center">
                             <img src="${getDriveUrl(item.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(item.imgId)}';" alt="" class="h-full object-contain" referrerpolicy="no-referrer">
                         </button>`;
             };
@@ -1341,13 +1341,17 @@
             if (GOOGLE_SHEETS_URL === 'URL_GOOGLE_APP_SCRIPT_ANDA_DISINI') return;
             try {
                 const response = await fetch(GOOGLE_SHEETS_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 if (data && Array.isArray(data)) {
                     leaderboard = data;
                     sortAndRenderLeaderboard();
                 }
             } catch(e) {
-                console.error("Gagal mengambil data peringkat dari Google Sheets:", e);
+                console.warn("Gagal mengambil data peringkat dari Google Sheets, menggunakan data lokal:", e.message);
+                sortAndRenderLeaderboard();
             }
         }
 
