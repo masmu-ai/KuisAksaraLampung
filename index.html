@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Kuis Menulis Aksara Lampung</title>
+    <title>Menulis Aksara Lampung</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        /* (Styling CSS tidak berubah, disingkat untuk menghemat ruang, letakkan CSS Anda di sini) */
         :root { --tapis-red: #6A0C0B; --tapis-gold: #D4AF37; --tapis-dark: #1A1A1A; --tapis-light: #Fdfbf7; }
         body { font-family: 'Inter', sans-serif; background-color: var(--tapis-light); background-image: radial-gradient(var(--tapis-red) 0.5px, transparent 0.5px), radial-gradient(var(--tapis-red) 0.5px, var(--tapis-light) 0.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px; background-attachment: fixed; opacity: 0.95; color: var(--tapis-dark); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
         .font-serif { font-family: 'Playfair Display', serif; }
         .bg-tapis-red { background-color: var(--tapis-red); } .bg-tapis-gold { background-color: var(--tapis-gold); } .text-tapis-red { color: var(--tapis-red); } .text-tapis-gold { color: var(--tapis-gold); } .border-tapis-gold { border-color: var(--tapis-gold); }
         .btn-tapis { background: linear-gradient(135deg, var(--tapis-red), #4a0808); color: var(--tapis-gold); border: 1px solid var(--tapis-gold); transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); } .btn-tapis:hover { background: linear-gradient(135deg, #8a100f, var(--tapis-red)); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); } .btn-tapis:active { transform: translateY(0); }
-        .btn-aksara { background-color: white; border: 2px solid var(--tapis-gold); color: var(--tapis-red); font-weight: 600; border-radius: 8px; padding: 8px; cursor: grab; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); user-select: none; } .btn-aksara:active { cursor: grabbing; } .btn-aksara:hover { background-color: #fef0cd; transform: scale(1.05); }
+        .btn-aksara { background-color: white; border: 2px solid var(--tapis-gold); color: var(--tapis-red); font-weight: 600; border-radius: 8px; padding: 8px; cursor: grab; transition: all 0.2s; display: flex; align-items: center; justify-content: center; box-shadow: none; user-select: none; } .btn-aksara:active { cursor: grabbing; } .btn-aksara:hover { background-color: #fef0cd; transform: scale(1.05); }
         .papan-tulis-container { border: 2px solid #C5B390; border-radius: 16px; background-color: #FFFDF8; padding: 16px 20px; min-height: 150px; position: relative; box-shadow: inset 0 2px 6px rgba(0,0,0,0.03); display: flex; align-items: center; overflow-x: auto; } .papan-tulis-container-sm { border: 1.5px solid #C5B390; border-radius: 12px; background-color: #FFFDF8; padding: 8px 12px; min-height: 110px; position: relative; display: flex; align-items: center; overflow-x: auto; } .papan-tulis-lines { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-evenly; pointer-events: none; padding: 10px 0; } .notebook-line { width: 100%; height: 1px; background-color: #E8DFCE; } .papan-tulis-content { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; min-height: 120px; width: 100%; } .papan-tulis-content-sm { position: relative; z-index: 2; display: flex; align-items: center; gap: 8px; min-height: 90px; width: 100%; }
         .aksara-syllable-box { border: 1.5px dashed #A89B80; border-radius: 12px; padding: 6px 8px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-width: 65px; min-height: 110px; background: rgba(255, 255, 255, 0.7); cursor: grab; user-select: none; transition: all 0.2s ease; } .aksara-syllable-box:hover { border-color: #6A0C0B; background: rgba(255, 255, 255, 0.95); } .aksara-syllable-box:active { cursor: grabbing; } .aksara-syllable-box-sm { border: 1px dashed #A89B80; border-radius: 8px; padding: 4px 6px; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; position: relative; min-width: 48px; min-height: 80px; background: rgba(255, 255, 255, 0.85); user-select: none; }
         .syllable-middle-row { display: flex; align-items: center; justify-content: center; position: relative; width: 100%; } .slot-atas, .slot-bawah { height: 28px; width: 100%; display: flex; align-items: center; justify-content: center; } .slot-induk { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; } .slot-samping { width: 24px; height: 42px; display: flex; align-items: center; justify-content: center; margin-left: 2px; border-left: 1px dashed #D4C4A8; padding-left: 2px; } .aksara-syllable-box-sm .slot-atas, .aksara-syllable-box-sm .slot-bawah { height: 18px; } .aksara-syllable-box-sm .slot-induk { width: 28px; height: 28px; } .aksara-syllable-box-sm .slot-samping { width: 16px; height: 28px; }
@@ -33,12 +32,12 @@
         <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-3">
             <div class="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
                 <img src="https://lh3.googleusercontent.com/d/1bOXj6M4rIRBkCoIlG27ctT1sVB1cflRG" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=1bOXj6M4rIRBkCoIlG27ctT1sVB1cflRG&sz=w400';" alt="Logo" class="h-10 md:h-12 object-contain flex-shrink-0" referrerpolicy="no-referrer">
-                <h1 class="header-title-text font-serif text-tapis-gold font-bold tracking-wider text-center md:text-left whitespace-nowrap">Uji Kemampuan Menulis Aksara Lampung</h1>
+                <h1 class="header-title-text font-serif text-tapis-gold font-bold tracking-wider text-center md:text-left whitespace-nowrap">Menulis Aksara Lampung</h1>
             </div>
             <nav class="flex space-x-2 md:space-x-6 overflow-x-auto w-full md:w-auto justify-center pb-1 md:pb-0">
-                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn active text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-gamepad mr-1"></i> Kuis</button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="tab-btn text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-trophy mr-1"></i> Peringkat</button>
-                <button onclick="switchTab('admin')" id="tab-admin" class="tab-btn text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-user-shield mr-1"></i> Admin</button>
+                <button onclick="window.switchTab('quiz')" id="tab-quiz" class="tab-btn active text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-gamepad mr-1"></i> Kuis</button>
+                <button onclick="window.switchTab('leaderboard')" id="tab-leaderboard" class="tab-btn text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-trophy mr-1"></i> Peringkat</button>
+                <button onclick="window.switchTab('admin')" id="tab-admin" class="tab-btn text-white hover:text-tapis-gold font-medium px-2 py-1 whitespace-nowrap transition-colors"><i class="fa-solid fa-user-shield mr-1"></i> Admin</button>
             </nav>
         </div>
     </header>
@@ -51,18 +50,17 @@
                 <div class="mb-6 flex justify-center items-center">
                     <img src="https://lh3.googleusercontent.com/d/1bOXj6M4rIRBkCoIlG27ctT1sVB1cflRG" onerror="this.onerror=null; this.src='https://drive.google.com/thumbnail?id=1bOXj6M4rIRBkCoIlG27ctT1sVB1cflRG&sz=w400';" alt="Logo" class="h-28 object-contain drop-shadow-md" referrerpolicy="no-referrer">
                 </div>
-                <h2 class="text-2xl font-serif font-bold text-tapis-red mb-2">Uji Kemampuan Menulis Aksara Lampung</h2>
-                <p class="text-gray-600 mb-6">Uji kemampuanmu menulis Aksara Lampung.</p>
-                <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-tapis-red focus:outline-none mb-6 text-lg text-center" onkeypress="handleEnter(event, startQuiz)">
-                <button onclick="startQuiz()" class="btn-tapis w-full py-3 rounded-lg font-bold text-lg uppercase tracking-wide">Mulai Kuis <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                <h2 class="text-2xl font-serif font-bold text-tapis-red mb-6">Menulis Aksara Lampung</h2>
+                <input type="text" id="player-name" placeholder="Masukkan Nama Anda..." class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-tapis-red focus:outline-none mb-6 text-lg text-center" onkeypress="window.handleEnter(event, window.startQuiz)">
+                <button onclick="window.startQuiz()" class="btn-tapis w-full py-3 rounded-lg font-bold text-lg uppercase tracking-wide">Mulai Kuis <i class="fa-solid fa-arrow-right ml-2"></i></button>
             </div>
 
             <!-- Quiz Interface -->
             <div id="quiz-interface" class="hidden">
                 <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
-                    <div class="bg-gray-100 px-6 py-4 border-b flex justify-between items-center">
+                    <div class="bg-gray-100 px-6 py-4 border-b flex justify-between items-center flex-wrap gap-2">
                         <div class="font-bold text-gray-700">Peserta: <span id="display-player-name" class="text-tapis-red"></span></div>
-                        <div class="font-bold text-gray-700">Waktu: <span id="display-timer" class="text-tapis-red text-xl">00:00</span></div>
+                        <div class="font-bold text-gray-700">Waktu: <span id="display-timer" class="text-tapis-red text-xl font-mono">00:00</span></div>
                         <div class="font-bold text-gray-700">Skor: <span id="display-score" class="text-tapis-red text-xl">0</span></div>
                     </div>
                     <div class="p-6 md:p-8">
@@ -75,28 +73,28 @@
                         <div class="mb-6 space-y-4">
                             <div class="flex justify-between items-center">
                                 <h4 class="font-serif font-bold text-xl text-gray-800">Papan Tulis Jawaban</h4>
-                                <span class="text-xs text-gray-500">Seret aksara / anak huruf ke papan</span>
+                                <span class="text-xs text-gray-500">Klik / Seret aksara ke papan</span>
                             </div>
-                            <div id="papan-tulis-container" class="papan-tulis-container" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleBoardDrop(event)">
+                            <div id="papan-tulis-container" class="papan-tulis-container" ondragover="window.handleDragOver(event)" ondragleave="window.handleDragLeave(event)" ondrop="window.handleBoardDrop(event)">
                                 <div class="papan-tulis-lines"><div class="notebook-line"></div><div class="notebook-line"></div><div class="notebook-line"></div></div>
                                 <div id="papan-tulis" class="papan-tulis-content"></div>
                             </div>
                             <div class="flex flex-wrap justify-between items-center gap-3">
-                                <div id="trash-zone" class="trash-zone-btn" ondragover="handleDragOverTrash(event)" ondragleave="handleDragLeaveTrash(event)" ondrop="handleTrashDrop(event)">
+                                <div id="trash-zone" class="trash-zone-btn" ondragover="window.handleDragOverTrash(event)" ondragleave="window.handleDragLeaveTrash(event)" ondrop="window.handleTrashDrop(event)">
                                     <i class="fa-solid fa-trash-can"></i><span>Seret ke sini untuk menghapus</span>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="removeLastTile()" class="action-btn-outline">Hapus Terakhir</button>
-                                    <button onclick="clearBoard()" class="action-btn-outline">Kosongkan</button>
+                                    <button onclick="window.removeLastTile()" class="action-btn-outline">Hapus Terakhir</button>
+                                    <button onclick="window.clearBoard()" class="action-btn-outline">Kosongkan</button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="flex justify-between items-center mb-8 border-b pb-6">
-                            <button onclick="addSpace()" class="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 font-medium py-2 px-6 rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-arrows-left-right mr-2"></i> Spasi</button>
+                            <button onclick="window.addSpace()" class="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 font-medium py-2 px-6 rounded-lg transition-colors shadow-sm"><i class="fa-solid fa-arrows-left-right mr-2"></i> Spasi</button>
                             <div class="flex gap-3">
-                                <button id="btn-lanjut" onclick="nextQuestion()" class="btn-tapis py-3 px-8 rounded-lg font-bold text-lg shadow-lg hidden">Lanjutkan <i class="fa-solid fa-arrow-right ml-2"></i></button>
-                                <button id="btn-selesai" onclick="endQuiz()" class="btn-tapis py-3 px-8 rounded-lg font-bold text-lg shadow-lg bg-green-700 hidden">Selesai <i class="fa-solid fa-flag-checkered ml-2"></i></button>
+                                <button id="btn-lanjut" onclick="window.nextQuestion()" class="btn-tapis py-3 px-8 rounded-lg font-bold text-lg shadow-lg">Lanjutkan <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                                <button id="btn-selesai" onclick="window.endQuiz()" class="btn-tapis py-3 px-8 rounded-lg font-bold text-lg shadow-lg bg-green-700 hidden">Selesai <i class="fa-solid fa-flag-checkered ml-2"></i></button>
                             </div>
                         </div>
 
@@ -148,9 +146,9 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <button onclick="downloadPDFReport()" class="btn-tapis flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-file-arrow-down"></i> Unduh PDF</button>
-                    <button onclick="goToLeaderboard()" class="bg-gray-100 text-gray-800 hover:bg-gray-200 border flex-1 py-3 rounded-lg font-bold transition-colors">Lihat Papan Peringkat <i class="fa-solid fa-trophy ml-1"></i></button>
-                    <button onclick="resetApp()" class="bg-gray-200 text-gray-700 hover:bg-gray-300 py-3 px-5 rounded-lg font-bold transition-colors">Kembali</button>
+                    <button onclick="window.downloadPDFReport()" class="btn-tapis flex-1 py-3 rounded-lg font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-file-arrow-down"></i> Unduh PDF</button>
+                    <button onclick="window.goToLeaderboard()" class="bg-gray-100 text-gray-800 hover:bg-gray-200 border flex-1 py-3 rounded-lg font-bold transition-colors">Lihat Papan Peringkat <i class="fa-solid fa-trophy ml-1"></i></button>
+                    <button onclick="window.resetApp()" class="bg-gray-200 text-gray-700 hover:bg-gray-300 py-3 px-5 rounded-lg font-bold transition-colors">Kembali</button>
                 </div>
             </div>
         </section>
@@ -212,17 +210,17 @@
 
         <!-- ==================== ADMIN TAB ==================== -->
         <section id="section-admin" class="hidden">
-            <div id="admin-login" class="bg-white rounded-xl shadow-xl p-8 max-w-sm mx-auto border-t-4 border-gray-800 text-center">
+            <div id="admin-login" class="bg-white rounded-xl p-8 max-w-sm mx-auto border border-gray-300 text-center">
                 <div class="mb-6 text-gray-800 text-5xl"><i class="fa-solid fa-lock"></i></div>
                 <h2 class="text-2xl font-serif font-bold text-gray-800 mb-6">Akses Admin</h2>
-                <input type="password" id="admin-password" placeholder="Kata Sandi" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-gray-800 focus:outline-none mb-4 text-center" onkeypress="window.handleEnter(event, window.adminLogin)">
-                <button onclick="window.adminLogin()" class="w-full py-3 rounded-lg font-bold text-white bg-gray-800 hover:bg-black transition-colors shadow-lg">Masuk</button>
+                <input type="password" id="admin-password" placeholder="Kata Sandi" class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-gray-800 focus:outline-none mb-4 text-center shadow-none" onkeypress="window.handleEnter(event, window.adminLogin)">
+                <button onclick="window.adminLogin()" class="w-full py-3 rounded-lg font-bold text-white bg-gray-800 hover:bg-black transition-colors">Masuk</button>
             </div>
 
             <div id="admin-dashboard" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-3xl font-serif font-bold text-tapis-red">Dasbor Admin</h2>
-                    <button onclick="adminLogout()" class="text-gray-600 hover:text-red-600 font-medium bg-white px-4 py-2 rounded shadow transition-colors"><i class="fa-solid fa-sign-out-alt mr-1"></i> Keluar</button>
+                    <button onclick="window.adminLogout()" class="text-gray-600 hover:text-red-600 font-medium bg-white px-4 py-2 rounded shadow transition-colors"><i class="fa-solid fa-sign-out-alt mr-1"></i> Keluar</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -251,16 +249,16 @@
                                     <div id="admin-q-board" class="papan-tulis-content-sm"></div>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <button onclick="adminRemoveLast()" class="text-xs bg-gray-200 px-3 py-1.5 rounded hover:bg-gray-300 font-medium">Hapus Terakhir</button>
-                                    <button onclick="adminAddSpace()" class="text-xs bg-gray-200 px-3 py-1.5 rounded hover:bg-gray-300 font-medium">Tambah Spasi</button>
-                                    <button onclick="adminClearBoard()" class="text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded hover:bg-red-200 font-medium">Kosongkan</button>
+                                    <button onclick="window.adminRemoveLast()" class="text-xs bg-gray-200 px-3 py-1.5 rounded hover:bg-gray-300 font-medium">Hapus Terakhir</button>
+                                    <button onclick="window.adminAddSpace()" class="text-xs bg-gray-200 px-3 py-1.5 rounded hover:bg-gray-300 font-medium">Tambah Spasi</button>
+                                    <button onclick="window.adminClearBoard()" class="text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded hover:bg-red-200 font-medium">Kosongkan</button>
                                 </div>
                             </div>
                             <div class="border rounded p-2 bg-gray-50 max-h-60 overflow-y-auto mt-2 text-sm">
                                 <p class="text-xs font-bold text-gray-500 mb-1">Klik Aksara untuk Menyusun Kunci Jawaban:</p>
                                 <div id="admin-keyboard" class="flex flex-wrap gap-1"></div>
                             </div>
-                            <button onclick="saveNewQuestion()" class="w-full btn-tapis py-2 rounded font-bold shadow mt-4"><i class="fa-solid fa-save mr-1"></i> Simpan Soal ke Sheets</button>
+                            <button onclick="window.saveNewQuestion()" class="w-full btn-tapis py-2 rounded font-bold shadow mt-4"><i class="fa-solid fa-save mr-1"></i> Simpan Soal</button>
                         </div>
                     </div>
 
@@ -277,7 +275,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="admin-question-list" class="text-sm">
-                                    <tr><td colspan="3" class="text-center py-4 text-gray-500">Memuat soal dari server...</td></tr>
+                                    <tr><td colspan="3" class="text-center py-4 text-gray-500">Memuat soal...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -313,12 +311,11 @@
             <div id="modal-icon" class="text-5xl mb-4"></div>
             <h3 id="modal-title" class="text-2xl font-bold mb-2 text-gray-800"></h3>
             <p id="modal-message" class="text-gray-600 mb-6"></p>
-            <button onclick="closeModal()" id="modal-btn" class="w-full py-2 rounded-lg font-bold text-white transition-colors shadow">Tutup</button>
+            <button onclick="window.closeModal()" id="modal-btn" class="w-full py-2 rounded-lg font-bold text-white transition-colors shadow">Tutup</button>
         </div>
     </div>
 
     <script type="module">
-        // ==== PENTING: GANTI URL DI BAWAH DENGAN URL WEB APP DARI GOOGLE APPS SCRIPT ANDA ====
         const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbymt1BaYdr1mKqY80SHG3C9aIn3GhMBZJdWZ-gLRm5XUDjYZVqHS2fgCxCW8QlU-2nYPA/exec'; 
         
         let questions = [];
@@ -332,11 +329,10 @@
         let timerInterval = null;
 
         const defaultQuestions = [
-            { text: "Matahari", answer: ['Ma', 'Ta', 'Ha', 'Ra', 'Ulan-i'] },
-            { text: "Buku", answer: ['Ba', 'Bitan-u', 'Ka', 'Bitan-u'] }
+            { id: 'q1', text: "Matahari", answer: ['Ma', 'Ta', 'Ha', 'Ra', 'Ulan-i'] },
+            { id: 'q2', text: "Buku", answer: ['Ba', 'Bitan-u', 'Ka', 'Bitan-u'] }
         ];
 
-        // Memuat Aksara (Hanya cuplikan agar file berfungsi)
         const aksaraData = {
             induk: [
                 { id: 'Ka', label: 'Ka', type: 'induk', imgId: '1xFbcPxCDdqKJZDSnDz6a74azCLPd6aRf' }, 
@@ -380,209 +376,593 @@
             ]
         };
 
-        // --- FUNGSI BANTUAN UI ---
-        const getDriveUrl = (id) => `https://lh3.googleusercontent.com/d/${id}`;
-        const getFallbackUrl = (id) => `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+        const getDriveUrl = (id) => id ? `https://lh3.googleusercontent.com/d/${id}` : '';
+        const getFallbackUrl = (id) => id ? `https://drive.google.com/thumbnail?id=${id}&sz=w400` : '';
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60); const secs = seconds % 60;
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        function startTimer() {
-            clearInterval(timerInterval); currentUser.timeSeconds = 0;
-            document.getElementById('display-timer').innerText = formatTime(0);
-            timerInterval = setInterval(() => { currentUser.timeSeconds++; document.getElementById('display-timer').innerText = formatTime(currentUser.timeSeconds); }, 1000);
-        }
-        function stopTimer() { clearInterval(timerInterval); }
-
-        function findAksaraById(id) {
-            if (id === 'space') return { id: 'space', label: 'Spasi', type: 'space', isSpace: true };
-            for (const cat in aksaraData) { const found = aksaraData[cat].find(i => i.id === id); if (found) return { ...found, isSpace: false }; }
-            return { id, label: id, type: 'induk', isSpace: false };
-        }
         function getItemType(id) {
-            for (const cat in aksaraData) { const found = aksaraData[cat].find(i => i.id === id); if (found) return found.type; }
+            if (id === 'space') return 'space';
+            if (aksaraData.induk.some(x => x.id === id)) return 'induk';
+            if (aksaraData.atas.some(x => x.id === id)) return 'atas';
+            if (aksaraData.bawah.some(x => x.id === id)) return 'bawah';
+            if (aksaraData.samping.some(x => x.id === id)) return 'samping';
             return 'induk';
         }
-        
-        function groupTilesIntoSyllables(tilesArr) {
-            const syllables = []; let currentSyl = null;
-            tilesArr.forEach(tile => {
+
+        function findAksaraById(id) {
+            if (id === 'space') return { id: 'space', label: 'Spasi', isSpace: true, type: 'space' };
+            const all = [...aksaraData.induk, ...aksaraData.atas, ...aksaraData.bawah, ...aksaraData.samping];
+            return all.find(x => x.id === id) || { id: id, label: id, type: 'induk', imgId: '' };
+        }
+
+        function groupTilesIntoSyllables(tiles) {
+            const syllables = [];
+            let currentSyl = null;
+
+            tiles.forEach(tile => {
                 if (tile.isSpace || tile.id === 'space') {
-                    if (currentSyl) { syllables.push(currentSyl); currentSyl = null; }
-                    syllables.push({ isSpace: true }); return;
+                    syllables.push({ isSpace: true });
+                    currentSyl = null;
+                    return;
                 }
+
                 const type = tile.type || getItemType(tile.id);
+
                 if (type === 'induk') {
-                    if (currentSyl) syllables.push(currentSyl);
                     currentSyl = { induk: tile, atas: null, bawah: null, samping: null };
-                } else if (currentSyl) {
-                    if (type === 'atas') currentSyl.atas = tile; else if (type === 'bawah') currentSyl.bawah = tile; else if (type === 'samping') currentSyl.samping = tile;
-                } else {
-                    currentSyl = { induk: null, atas: type === 'atas' ? tile : null, bawah: type === 'bawah' ? tile : null, samping: type === 'samping' ? tile : null };
+                    syllables.push(currentSyl);
+                } else if (type === 'atas' || type === 'bawah' || type === 'samping') {
+                    if (!currentSyl || currentSyl[type]) {
+                        currentSyl = { induk: null, atas: null, bawah: null, samping: null };
+                        currentSyl[type] = tile;
+                        syllables.push(currentSyl);
+                    } else {
+                        currentSyl[type] = tile;
+                    }
                 }
             });
-            if (currentSyl) syllables.push(currentSyl);
+
             return syllables;
         }
 
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        // --- GLOBAL EXPORTS TO WINDOW FOR INLINE HTML EVENT HANDLERS ---
+        window.startQuiz = function() {
+            const nameInput = document.getElementById('player-name');
+            const name = nameInput ? nameInput.value.trim() : '';
+            if (!name) {
+                window.showModal('Perhatian', 'Harap masukkan Nama Anda!', 'warning');
+                return;
+            }
+            currentUser = { name: name, score: 0, timeSeconds: 0 };
+            userQuizHistory = [];
+            currentQuestionIndex = 0;
+
+            document.getElementById('display-player-name').innerText = name;
+            document.getElementById('display-score').innerText = '0';
+            document.getElementById('display-timer').innerText = '00:00';
+
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                currentUser.timeSeconds++;
+                document.getElementById('display-timer').innerText = formatTime(currentUser.timeSeconds);
+            }, 1000);
+
+            document.getElementById('quiz-registration').classList.add('hidden');
+            document.getElementById('quiz-interface').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+
+            loadQuestion(0);
+        };
+
+        function loadQuestion(index) {
+            const activeQuestions = (questions && questions.length > 0) ? questions : defaultQuestions;
+            if (index >= activeQuestions.length) {
+                window.endQuiz();
+                return;
+            }
+            currentQuestionIndex = index;
+            const q = activeQuestions[index];
+            document.getElementById('question-counter').innerText = `Soal ${index + 1} / ${activeQuestions.length}`;
+            document.getElementById('question-text').innerText = q.text;
+
+            window.clearBoard();
+
+            const btnLanjut = document.getElementById('btn-lanjut');
+            const btnSelesai = document.getElementById('btn-selesai');
+            if (index === activeQuestions.length - 1) {
+                btnLanjut.classList.add('hidden');
+                btnSelesai.classList.remove('hidden');
+            } else {
+                btnLanjut.classList.remove('hidden');
+                btnSelesai.classList.add('hidden');
+            }
+        }
+        window.loadQuestion = loadQuestion;
+
+        function evaluateCurrentQuestion() {
+            const activeQuestions = (questions && questions.length > 0) ? questions : defaultQuestions;
+            if (currentQuestionIndex >= activeQuestions.length) return;
+            const q = activeQuestions[currentQuestionIndex];
+            const userKeys = currentAnswer.map(t => t.id);
+            const correctKeys = q.answer || [];
+
+            const isCorrect = userKeys.length === correctKeys.length && userKeys.every((val, idx) => val === correctKeys[idx]);
+
+            if (isCorrect) {
+                currentUser.score += 20;
+            }
+
+            userQuizHistory.push({
+                questionText: q.text,
+                userAnswer: [...currentAnswer],
+                correctAnswerKeys: [...correctKeys],
+                isCorrect: isCorrect
+            });
+
+            document.getElementById('display-score').innerText = currentUser.score;
+        }
+
+        window.nextQuestion = function() {
+            evaluateCurrentQuestion();
+            loadQuestion(currentQuestionIndex + 1);
+        };
+
+        window.endQuiz = function() {
+            if (timerInterval) clearInterval(timerInterval);
+            evaluateCurrentQuestion();
+
+            document.getElementById('quiz-interface').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+
+            document.getElementById('result-name').innerText = currentUser.name;
+            document.getElementById('result-score').innerText = currentUser.score;
+
+            window.renderReportQuestionList();
+
+            const correctCount = userQuizHistory.filter(h => h.isCorrect).length;
+            const wrongCount = userQuizHistory.length - correctCount;
+
+            const record = {
+                name: currentUser.name,
+                score: currentUser.score,
+                correctCount: correctCount,
+                wrongCount: wrongCount,
+                timeSeconds: currentUser.timeSeconds,
+                date: new Date().toISOString()
+            };
+
+            leaderboard.push(record);
+            sortAndRenderLeaderboard();
+
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
+                try {
+                    fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(record)
+                    });
+                } catch(e) { console.error("Gagal mengirim skor:", e); }
+            }
+        };
+
+        window.addTileToBoard = function(id, label, isSpace = false, imgId = '', type = '') {
+            const tileType = type || getItemType(id);
+            currentAnswer.push({ id, label, isSpace, imgId, type: tileType });
+            window.renderBoard();
+        };
+
         window.renderBoard = function() {
-            const board = document.getElementById('papan-tulis'); if (!board) return;
+            const board = document.getElementById('papan-tulis');
+            if (!board) return;
             const syllables = groupTilesIntoSyllables(currentAnswer);
-            if (syllables.length === 0) { board.innerHTML = `<span class="text-gray-400 text-sm italic py-4">Papan tulis kosong. Pilih aksara.</span>`; return; }
-            board.innerHTML = syllables.map((syl) => {
-                if (syl.isSpace) return `<div class="aksara-tile-space">Spasi</div>`;
+            if (syllables.length === 0) {
+                board.innerHTML = `<span class="text-gray-400 italic text-sm select-none">Papan tulis kosong. Seret atau klik aksara untuk menyusun...</span>`;
+                return;
+            }
+            board.innerHTML = syllables.map((syl, idx) => {
+                if (syl.isSpace) {
+                    return `<div class="aksara-tile-space" title="Klik untuk hapus" onclick="window.removeSyllableAtIndex(${idx})">Spasi</div>`;
+                }
                 const topImg = syl.atas ? `<img src="${getDriveUrl(syl.atas.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.atas.imgId)}';">` : '';
                 const mainImg = syl.induk ? `<img src="${getDriveUrl(syl.induk.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.induk.imgId)}';">` : '';
                 const bottomImg = syl.bawah ? `<img src="${getDriveUrl(syl.bawah.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.bawah.imgId)}';">` : '';
                 const sideImg = syl.samping ? `<img src="${getDriveUrl(syl.samping.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.samping.imgId)}';">` : '';
-                return `<div class="aksara-syllable-box animate-pop"><div class="slot-atas">${topImg}</div><div class="syllable-middle-row"><div class="slot-induk">${mainImg}</div>${syl.samping ? `<div class="slot-samping">${sideImg}</div>` : ''}</div><div class="slot-bawah">${bottomImg}</div></div>`;
+
+                return `
+                    <div class="aksara-syllable-box" title="Klik untuk hapus" onclick="window.removeSyllableAtIndex(${idx})">
+                        <div class="slot-atas">${topImg}</div>
+                        <div class="syllable-middle-row">
+                            <div class="slot-induk">${mainImg}</div>
+                            ${syl.samping ? `<div class="slot-samping">${sideImg}</div>` : ''}
+                        </div>
+                        <div class="slot-bawah">${bottomImg}</div>
+                    </div>
+                `;
             }).join('');
         };
 
-        window.addTileToBoard = function(id, label, isSpace = false, imgId = '', type = '') { currentAnswer.push({ id, label, isSpace, imgId, type: type || getItemType(id) }); window.renderBoard(); };
-        window.addSpace = function() { window.addTileToBoard('space', 'Spasi', true, '', 'space'); };
-        window.removeLastTile = function() { if (currentAnswer.length > 0) currentAnswer.pop(); window.renderBoard(); };
-        window.clearBoard = function() { currentAnswer = []; window.renderBoard(); };
-        
-        window.handleDragStart = function(e, itemDataJson) { e.dataTransfer.setData('application/json', itemDataJson); };
-        window.handleDragOver = function(e) { e.preventDefault(); }; window.handleDragLeave = function(e) {};
-        window.handleBoardDrop = function(e) { e.preventDefault(); try { const data = JSON.parse(e.dataTransfer.getData('application/json')); if (data && data.id) window.addTileToBoard(data.id, data.label, data.isSpace, data.imgId, data.type); } catch (err) {} };
-        window.handleDragOverTrash = function(e) { e.preventDefault(); document.getElementById('trash-zone').classList.add('drag-over'); };
-        window.handleDragLeaveTrash = function(e) { document.getElementById('trash-zone').classList.remove('drag-over'); };
-        window.handleTrashDrop = function(e) { e.preventDefault(); document.getElementById('trash-zone').classList.remove('drag-over'); window.removeLastTile(); };
+        window.removeSyllableAtIndex = function(sylIndex) {
+            const syllables = groupTilesIntoSyllables(currentAnswer);
+            if (sylIndex >= 0 && sylIndex < syllables.length) {
+                let currentSylIdx = 0;
+                const newAnswer = [];
+                let curSyl = null;
 
-        // --- MANAJEMEN KUIS ---
-        window.startQuiz = function() {
-            const nameInput = document.getElementById('player-name').value.trim();
-            if (!nameInput) { showModal("Perhatian", "Silakan masukkan nama Anda terlebih dahulu.", "warning"); return; }
-            if (questions.length === 0) questions = [...defaultQuestions];
-            
-            currentUser = { name: nameInput, score: 0, timeSeconds: 0 };
-            currentQuestionIndex = 0; userQuizHistory = [];
-            
-            document.getElementById('quiz-registration').classList.add('hidden');
-            document.getElementById('quiz-result').classList.add('hidden');
-            document.getElementById('quiz-interface').classList.remove('hidden');
-            
-            document.getElementById('display-player-name').innerText = currentUser.name;
-            document.getElementById('display-score').innerText = currentUser.score;
-            startTimer(); loadQuestion();
-        };
-
-        window.loadQuestion = function() {
-            const q = questions[currentQuestionIndex]; if (!q) return;
-            document.getElementById('question-counter').innerText = `Soal ${currentQuestionIndex + 1} / ${questions.length}`;
-            document.getElementById('question-text').innerText = q.text;
-            currentAnswer = []; window.renderBoard();
-
-            const btnLanjut = document.getElementById('btn-lanjut'); const btnSelesai = document.getElementById('btn-selesai');
-            if (currentQuestionIndex < questions.length - 1) { btnLanjut.classList.remove('hidden'); btnSelesai.classList.add('hidden'); } 
-            else { btnLanjut.classList.add('hidden'); btnSelesai.classList.remove('hidden'); }
-        };
-
-        window.checkCurrentAnswer = function() {
-            const q = questions[currentQuestionIndex];
-            const userSyls = groupTilesIntoSyllables(currentAnswer);
-            const correctTiles = q.answer.map(id => findAksaraById(id));
-            const correctSyls = groupTilesIntoSyllables(correctTiles);
-            
-            let isCorrect = true;
-            if (userSyls.length !== correctSyls.length) isCorrect = false;
-            else {
-                for (let i = 0; i < userSyls.length; i++) {
-                    const u = userSyls[i]; const c = correctSyls[i];
-                    if (u.isSpace !== c.isSpace) { isCorrect = false; break; }
-                    if (!u.isSpace) {
-                        if ((u.induk?.id !== c.induk?.id) || (u.atas?.id !== c.atas?.id) || (u.bawah?.id !== c.bawah?.id) || (u.samping?.id !== c.samping?.id)) {
-                            isCorrect = false; break;
+                currentAnswer.forEach(tile => {
+                    if (tile.isSpace || tile.id === 'space') {
+                        if (currentSylIdx !== sylIndex) newAnswer.push(tile);
+                        currentSylIdx++;
+                        curSyl = null;
+                    } else {
+                        const type = tile.type || getItemType(tile.id);
+                        if (type === 'induk') {
+                            if (curSyl) currentSylIdx++;
+                            curSyl = { induk: tile };
+                        } else if (!curSyl || curSyl[type]) {
+                            if (curSyl) currentSylIdx++;
+                            curSyl = {};
+                            curSyl[type] = tile;
+                        } else {
+                            curSyl[type] = tile;
+                        }
+                        if (currentSylIdx !== sylIndex) {
+                            newAnswer.push(tile);
                         }
                     }
+                });
+                currentAnswer = newAnswer;
+                window.renderBoard();
+            }
+        };
+
+        window.removeLastTile = function() {
+            if (currentAnswer.length > 0) currentAnswer.pop();
+            window.renderBoard();
+        };
+
+        window.clearBoard = function() {
+            currentAnswer = [];
+            window.renderBoard();
+        };
+
+        window.addSpace = function() {
+            window.addTileToBoard('space', 'Spasi', true, '', 'space');
+        };
+
+        // DRAG & DROP HANDLERS
+        window.handleDragStart = function(event, itemData) {
+            const dataStr = typeof itemData === 'string' ? itemData : JSON.stringify(itemData);
+            event.dataTransfer.setData('text/plain', dataStr);
+        };
+
+        window.handleDragOver = function(event) {
+            event.preventDefault();
+            const container = document.getElementById('papan-tulis-container');
+            if (container) container.classList.add('border-tapis-gold');
+        };
+
+        window.handleDragLeave = function(event) {
+            const container = document.getElementById('papan-tulis-container');
+            if (container) container.classList.remove('border-tapis-gold');
+        };
+
+        window.handleBoardDrop = function(event) {
+            event.preventDefault();
+            const container = document.getElementById('papan-tulis-container');
+            if (container) container.classList.remove('border-tapis-gold');
+            try {
+                const raw = event.dataTransfer.getData('text/plain');
+                if (raw && raw.trim()) {
+                    const item = JSON.parse(raw);
+                    window.addTileToBoard(item.id, item.label, item.isSpace || false, item.imgId, item.type);
                 }
-            }
-            if (isCorrect) { currentUser.score += 20; document.getElementById('display-score').innerText = currentUser.score; }
-            userQuizHistory.push({ questionText: q.text, userAnswer: [...currentAnswer], correctAnswerKeys: [...q.answer], isCorrect: isCorrect });
+            } catch(e) { console.error("Drop error", e); }
         };
 
-        window.nextQuestion = function() { checkCurrentAnswer(); if (currentQuestionIndex < questions.length - 1) { currentQuestionIndex++; loadQuestion(); } };
+        window.handleDragOverTrash = function(event) {
+            event.preventDefault();
+            const trash = document.getElementById('trash-zone');
+            if (trash) trash.classList.add('drag-over');
+        };
 
-        window.endQuiz = async function() {
-            checkCurrentAnswer(); stopTimer();
-            const correctCount = userQuizHistory.filter(h => h.isCorrect).length;
-            const wrongCount = userQuizHistory.length - correctCount;
+        window.handleDragLeaveTrash = function(event) {
+            const trash = document.getElementById('trash-zone');
+            if (trash) trash.classList.remove('drag-over');
+        };
 
-            document.getElementById('quiz-interface').classList.add('hidden');
-            document.getElementById('quiz-result').classList.remove('hidden');
-            document.getElementById('result-name').innerText = currentUser.name;
-            document.getElementById('result-score').innerText = currentUser.score;
+        window.handleTrashDrop = function(event) {
+            event.preventDefault();
+            const trash = document.getElementById('trash-zone');
+            if (trash) trash.classList.remove('drag-over');
+            window.removeLastTile();
+        };
 
-            renderReportQuestionList();
+        window.switchTab = function(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`)?.classList.add('active');
+            ['quiz', 'leaderboard', 'admin'].forEach(t => document.getElementById(`section-${t}`).classList.add('hidden'));
+            document.getElementById(`section-${tab}`)?.classList.remove('hidden');
+        };
 
-            const resultEntry = { type: 'leaderboard', name: currentUser.name, score: currentUser.score, correctCount, wrongCount, timeSeconds: currentUser.timeSeconds, date: new Date().toISOString() };
+        window.showModal = function(title, message, type = 'info') {
+            const modal = document.getElementById('custom-modal');
+            const titleEl = document.getElementById('modal-title');
+            const msgEl = document.getElementById('modal-message');
+            const iconEl = document.getElementById('modal-icon');
+            const btn = document.getElementById('modal-btn');
             
-            if (GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
-                try {
-                    await fetch(GOOGLE_SHEETS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(resultEntry) });
-                    fetchLeaderboard(); // Segarkan setelah kirim
-                } catch (err) { console.error("Gagal simpan skor:", err); }
+            if (!modal) return;
+            
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+            
+            if (type === 'success') {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-check text-green-500"></i>';
+                btn.className = 'w-full py-2 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 transition-colors shadow';
+            } else if (type === 'warning') {
+                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-yellow-500"></i>';
+                btn.className = 'w-full py-2 rounded-lg font-bold text-white bg-yellow-600 hover:bg-yellow-700 transition-colors shadow';
+            } else if (type === 'error') {
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-500"></i>';
+                btn.className = 'w-full py-2 rounded-lg font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shadow';
             } else {
-                leaderboard.push(resultEntry); sortAndRenderLeaderboard();
+                iconEl.innerHTML = '<i class="fa-solid fa-circle-info text-blue-500"></i>';
+                btn.className = 'w-full py-2 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow';
             }
+            
+            modal.classList.remove('hidden');
         };
 
-        window.renderReportQuestionList = function() { /* Logika Report sama seperti sebelumnya */ };
-        window.downloadPDFReport = function() { html2pdf().set({margin: 0.4, filename: `Hasil_Kuis.pdf`, jsPDF:{format:'letter'}}).from(document.getElementById('report-card-printable')).save(); };
-        window.goToLeaderboard = function() { window.switchTab('leaderboard'); };
-        window.resetApp = function() { document.getElementById('quiz-result').classList.add('hidden'); document.getElementById('quiz-registration').classList.remove('hidden'); document.getElementById('player-name').value = ''; };
+        window.closeModal = function() {
+            const modal = document.getElementById('custom-modal');
+            if (modal) modal.classList.add('hidden');
+        };
 
-        // --- MANAJEMEN API GOOGLE SHEETS ---
+        window.handleEnter = function(e, action) {
+            if (e.key === 'Enter') action();
+        };
+
+        window.renderReportQuestionList = function() {
+            const container = document.getElementById('report-question-list');
+            if (!container) return;
+            container.innerHTML = userQuizHistory.map((h, idx) => {
+                const userSyls = groupTilesIntoSyllables(h.userAnswer);
+                const correctTiles = h.correctAnswerKeys.map(id => findAksaraById(id));
+                const correctSyls = groupTilesIntoSyllables(correctTiles);
+
+                const renderSylHtml = (syls) => {
+                    if (syls.length === 0) return `<span class="text-xs text-gray-400 italic">Tidak ada jawaban</span>`;
+                    return syls.map(syl => {
+                        if (syl.isSpace) return `<div class="aksara-tile-space-sm">Spasi</div>`;
+                        const topImg = syl.atas ? `<img src="${getDriveUrl(syl.atas.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.atas.imgId)}';">` : '';
+                        const mainImg = syl.induk ? `<img src="${getDriveUrl(syl.induk.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.induk.imgId)}';">` : '';
+                        const bottomImg = syl.bawah ? `<img src="${getDriveUrl(syl.bawah.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.bawah.imgId)}';">` : '';
+                        const sideImg = syl.samping ? `<img src="${getDriveUrl(syl.samping.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(syl.samping.imgId)}';">` : '';
+                        return `<div class="aksara-syllable-box-sm"><div class="slot-atas">${topImg}</div><div class="syllable-middle-row"><div class="slot-induk">${mainImg}</div>${syl.samping ? `<div class="slot-samping">${sideImg}</div>` : ''}</div><div class="slot-bawah">${bottomImg}</div></div>`;
+                    }).join('');
+                };
+
+                return `
+                    <div class="p-4 border rounded-lg ${h.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-gray-800">Soal ${idx + 1}: ${h.questionText}</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-full ${h.isCorrect ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}">
+                                ${h.isCorrect ? '<i class="fa-solid fa-check mr-1"></i> Benar (+20)' : '<i class="fa-solid fa-xmark mr-1"></i> Salah (+0)'}
+                            </span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <span class="font-semibold text-gray-600 block mb-1">Jawaban Anda:</span>
+                                <div class="flex flex-wrap gap-2 items-center bg-white p-2 rounded border">${renderSylHtml(userSyls)}</div>
+                            </div>
+                            ${!h.isCorrect ? `
+                            <div>
+                                <span class="font-semibold text-gray-600 block mb-1">Kunci Jawaban Benar:</span>
+                                <div class="flex flex-wrap gap-2 items-center bg-white p-2 rounded border border-green-300">${renderSylHtml(correctSyls)}</div>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('report-date-stamp').innerText = `Tanggal: ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+        };
+
+        window.downloadPDFReport = function() { 
+            html2pdf().set({margin: 0.4, filename: `Hasil_Kuis_${currentUser.name || 'Peserta'}.pdf`, jsPDF:{format:'letter'}}).from(document.getElementById('report-card-printable')).save(); 
+        };
+
+        window.goToLeaderboard = function() { 
+            window.switchTab('leaderboard'); 
+        };
+
+        window.resetApp = function() { 
+            document.getElementById('quiz-result').classList.add('hidden'); 
+            document.getElementById('quiz-registration').classList.remove('hidden'); 
+            const input = document.getElementById('player-name');
+            if (input) input.value = ''; 
+        };
+
+        // API & LEADERBOARD
         async function fetchQuestions() {
-            if (GOOGLE_SHEETS_URL === 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') return;
+            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
+                questions = [...defaultQuestions];
+                renderAdminQuestionList();
+                return;
+            }
             try {
                 const response = await fetch(GOOGLE_SHEETS_URL + "?action=questions");
-                const data = await response.json();
-                if (data && Array.isArray(data) && data.length > 0) { questions = data; }
+                const text = await response.text();
+                if (text && (text.trim().startsWith('[') || text.trim().startsWith('{'))) {
+                    const data = JSON.parse(text);
+                    if (data && Array.isArray(data) && data.length > 0) { 
+                        questions = data; 
+                    } else {
+                        questions = [...defaultQuestions];
+                    }
+                } else {
+                    questions = [...defaultQuestions];
+                }
                 renderAdminQuestionList();
-            } catch(e) { console.warn("Gagal load bank soal:", e); }
+            } catch(e) { 
+                console.warn("Gagal memuat bank soal dari server, menggunakan data default:", e); 
+                questions = [...defaultQuestions];
+                renderAdminQuestionList();
+            }
         }
 
         async function fetchLeaderboard() {
-            if (GOOGLE_SHEETS_URL === 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') return;
+            if (!GOOGLE_SHEETS_URL || GOOGLE_SHEETS_URL === 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') return;
             try {
                 const response = await fetch(GOOGLE_SHEETS_URL + "?action=leaderboard");
-                const data = await response.json();
-                if (data && Array.isArray(data)) { leaderboard = data; sortAndRenderLeaderboard(); }
-            } catch(e) { console.warn("Gagal load peringkat:", e); }
+                const text = await response.text();
+                if (text && (text.trim().startsWith('[') || text.trim().startsWith('{'))) {
+                    const data = JSON.parse(text);
+                    if (data && Array.isArray(data)) { 
+                        leaderboard = data; 
+                        sortAndRenderLeaderboard(); 
+                    }
+                }
+            } catch(e) { console.warn("Gagal memuat peringkat:", e); }
         }
 
         function sortAndRenderLeaderboard() {
-            leaderboard.sort((a, b) => { if (b.score !== a.score) return b.score - a.score; return (a.timeSeconds || 0) - (b.timeSeconds || 0); });
-            renderLeaderboard(); renderAdminLeaderboard();
+            leaderboard.sort((a, b) => { 
+                if (b.score !== a.score) return b.score - a.score; 
+                return (a.timeSeconds || 0) - (b.timeSeconds || 0); 
+            });
+            renderLeaderboard(); 
+            renderAdminLeaderboard();
         }
 
-        function renderLeaderboard() { /* Logika render HTML table peringkat (Sama dengan sebelumnya) */ }
-        function renderAdminLeaderboard() { /* Logika render HTML table admin peringkat */ }
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            if (!tbody) return;
+            if (leaderboard.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400">Belum ada data peringkat.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = leaderboard.map((item, index) => {
+                const rankBadge = index === 0 ? '🏆 1' : index === 1 ? '🥈 2' : index === 2 ? '🥉 3' : `${index + 1}`;
+                const dateStr = item.date ? new Date(item.date).toLocaleDateString('id-ID') : '-';
+                return `
+                    <tr class="border-b hover:bg-yellow-50 transition-colors">
+                        <td class="py-3 px-6 text-center font-bold text-lg">${rankBadge}</td>
+                        <td class="py-3 px-6 font-semibold text-gray-800">${item.name}</td>
+                        <td class="py-3 px-6 text-center font-bold text-tapis-red">${item.score}</td>
+                        <td class="py-3 px-6 text-center text-sm"><span class="text-green-600 font-bold">${item.correctCount || 0}</span> / <span class="text-red-500 font-bold">${item.wrongCount || 0}</span></td>
+                        <td class="py-3 px-6 text-center font-mono text-sm">${formatTime(item.timeSeconds || 0)}</td>
+                        <td class="py-3 px-6 text-right text-xs text-gray-500">${dateStr}</td>
+                        <td class="py-3 px-6 text-center">
+                            <button onclick="window.downloadSingleCertificate('${item.name}', ${item.score}, ${item.correctCount || 0}, ${item.wrongCount || 0}, ${item.timeSeconds || 0}, '${dateStr}', ${index + 1})" class="text-xs btn-tapis py-1 px-2 rounded shadow">
+                                <i class="fa-solid fa-download"></i> PDF
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-        // --- MANAJEMEN ADMIN ---
+        window.downloadSingleCertificate = function(name, score, correct, wrong, timeSec, dateStr, rank) {
+            document.getElementById('lb-pdf-name').innerText = name;
+            document.getElementById('lb-pdf-rank').innerText = `#${rank}`;
+            document.getElementById('lb-pdf-score').innerText = score;
+            document.getElementById('lb-pdf-correct').innerText = correct;
+            document.getElementById('lb-pdf-wrong').innerText = wrong;
+            document.getElementById('lb-pdf-time').innerText = formatTime(timeSec);
+            document.getElementById('lb-pdf-date').innerText = `Tanggal: ${dateStr}`;
+            
+            const element = document.getElementById('leaderboard-pdf-card');
+            element.classList.remove('hidden');
+            html2pdf().set({margin: 0.4, filename: `Sertifikat_${name}.pdf`, jsPDF:{format:'letter'}}).from(element).save().then(() => {
+                element.classList.add('hidden');
+            });
+        };
+
+        function renderAdminLeaderboard() {
+            const tbody = document.getElementById('admin-leaderboard-list');
+            if (!tbody) return;
+            if (leaderboard.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-500">Belum ada data peringkat.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = leaderboard.map((item, index) => {
+                const dateStr = item.date ? new Date(item.date).toLocaleDateString('id-ID') : '-';
+                return `
+                    <tr class="border-b">
+                        <td class="py-2 px-4 text-center font-bold">${index + 1}</td>
+                        <td class="py-2 px-4 font-semibold">${item.name}</td>
+                        <td class="py-2 px-4 text-center text-tapis-red font-bold">${item.score}</td>
+                        <td class="py-2 px-4 text-center font-mono">${formatTime(item.timeSeconds || 0)}</td>
+                        <td class="py-2 px-4 text-right text-xs text-gray-500">${dateStr}</td>
+                        <td class="py-2 px-4 text-center">
+                            <button onclick="window.deleteLeaderboardEntry(${index})" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.deleteLeaderboardEntry = function(index) {
+            if (confirm("Hapus data peringkat ini dari tampilan?")) {
+                leaderboard.splice(index, 1);
+                sortAndRenderLeaderboard();
+            }
+        };
+
+        // ADMIN PANEL LOGIC
         window.adminLogin = function() {
-            if (document.getElementById('admin-password').value === 'damainpd') {
+            const passInput = document.getElementById('admin-password');
+            if (passInput && passInput.value === 'damainpd') {
                 document.getElementById('admin-login').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                document.getElementById('admin-password').value = '';
-                adminClearBoard(); renderAdminQuestionList(); renderAdminLeaderboard();
-            } else { showModal("Ditolak", "Sandi salah!", "error"); }
+                passInput.value = '';
+                window.adminClearBoard(); 
+                renderAdminQuestionList(); 
+                renderAdminLeaderboard();
+            } else { 
+                window.showModal("Akses Ditolak", "Kata sandi salah!", "error"); 
+            }
         };
-        window.adminLogout = function() { document.getElementById('admin-login').classList.remove('hidden'); document.getElementById('admin-dashboard').classList.add('hidden'); };
 
-        window.addTileToAdminBoard = function(id, label, imgId, type) { adminAnswerTemp.push({ id, label, imgId, type: type || getItemType(id) }); renderAdminBoard(); };
-        window.adminAddSpace = function() { adminAnswerTemp.push({ id: 'space', label: 'Spasi', isSpace: true, type: 'space' }); renderAdminBoard(); };
-        window.adminRemoveLast = function() { if (adminAnswerTemp.length > 0) adminAnswerTemp.pop(); renderAdminBoard(); };
-        window.adminClearBoard = function() { adminAnswerTemp = []; renderAdminBoard(); };
+        window.adminLogout = function() { 
+            document.getElementById('admin-login').classList.remove('hidden'); 
+            document.getElementById('admin-dashboard').classList.add('hidden'); 
+        };
 
-        function renderAdminBoard() {
+        window.addTileToAdminBoard = function(id, label, imgId, type) { 
+            adminAnswerTemp.push({ id, label, imgId, type: type || getItemType(id) }); 
+            window.renderAdminBoard(); 
+        };
+
+        window.adminAddSpace = function() { 
+            adminAnswerTemp.push({ id: 'space', label: 'Spasi', isSpace: true, type: 'space' }); 
+            window.renderAdminBoard(); 
+        };
+
+        window.adminRemoveLast = function() { 
+            if (adminAnswerTemp.length > 0) adminAnswerTemp.pop(); 
+            window.renderAdminBoard(); 
+        };
+
+        window.adminClearBoard = function() { 
+            adminAnswerTemp = []; 
+            window.renderAdminBoard(); 
+        };
+
+        window.renderAdminBoard = function() {
             const board = document.getElementById('admin-q-board');
+            if (!board) return;
             const syllables = groupTilesIntoSyllables(adminAnswerTemp);
-            if (syllables.length === 0) { board.innerHTML = `<span class="text-gray-400 text-xs italic py-2">Kunci kosong. Klik aksara.</span>`; return; }
+            if (syllables.length === 0) { 
+                board.innerHTML = `<span class="text-gray-400 text-xs italic py-2">Kunci kosong. Klik aksara di bawah.</span>`; 
+                return; 
+            }
             board.innerHTML = syllables.map((syl) => {
                 if (syl.isSpace) return `<div class="aksara-tile-space-sm">Spasi</div>`;
                 const topImg = syl.atas ? `<img src="${getDriveUrl(syl.atas.imgId)}">` : '';
@@ -591,12 +971,12 @@
                 const sideImg = syl.samping ? `<img src="${getDriveUrl(syl.samping.imgId)}">` : '';
                 return `<div class="aksara-syllable-box-sm"><div class="slot-atas">${topImg}</div><div class="syllable-middle-row"><div class="slot-induk">${mainImg}</div>${syl.samping ? `<div class="slot-samping">${sideImg}</div>` : ''}</div><div class="slot-bawah">${bottomImg}</div></div>`;
             }).join('');
-        }
+        };
 
         window.saveNewQuestion = async function() {
             const textInput = document.getElementById('admin-q-text').value.trim();
-            if (!textInput) { showModal("Perhatian", "Harap isi Teks Soal!", "warning"); return; }
-            if (adminAnswerTemp.length === 0) { showModal("Perhatian", "Kunci jawaban aksara belum disusun!", "warning"); return; }
+            if (!textInput) { window.showModal("Perhatian", "Harap isi Teks Soal!", "warning"); return; }
+            if (adminAnswerTemp.length === 0) { window.showModal("Perhatian", "Kunci jawaban aksara belum disusun!", "warning"); return; }
 
             const newQ = {
                 type: 'question',
@@ -607,52 +987,103 @@
                 createdAt: new Date().toISOString()
             };
 
-            // Simpan ke Google Sheets
-            if (GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
                 try {
                     await fetch(GOOGLE_SHEETS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newQ) });
-                    showModal("Berhasil", "Soal baru berhasil disimpan ke server!", "success");
-                    fetchQuestions(); // Segarkan dari sheets
-                } catch(err) { showModal("Error", "Gagal menyimpan ke server", "error"); }
+                    window.showModal("Berhasil", "Soal baru berhasil disimpan ke server!", "success");
+                    fetchQuestions();
+                } catch(err) { window.showModal("Error", "Gagal menyimpan ke server", "error"); }
             } else {
-                questions.push(newQ); renderAdminQuestionList(); showModal("Berhasil", "Soal disimpan lokal (Ubah URL Apps Script agar tersimpan ke Sheets)", "success");
+                questions.push(newQ); 
+                renderAdminQuestionList(); 
+                window.showModal("Berhasil", "Soal disimpan secara lokal", "success");
             }
-            document.getElementById('admin-q-text').value = ''; adminClearBoard();
+            document.getElementById('admin-q-text').value = ''; 
+            window.adminClearBoard();
         };
 
         window.deleteQuestion = async function(qId) {
             if (!confirm("Hapus soal ini?")) return;
-            if (GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
                 try {
                     await fetch(GOOGLE_SHEETS_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'deleteQuestion', id: qId }) });
-                    fetchQuestions(); // Refresh data
+                    fetchQuestions();
                 } catch(e) {}
             } else {
-                questions = questions.filter(q => q.id !== qId); renderAdminQuestionList();
+                questions = questions.filter(q => q.id !== qId); 
+                renderAdminQuestionList();
             }
         };
 
         function renderAdminQuestionList() {
             const tbody = document.getElementById('admin-question-list');
+            if (!tbody) return;
             if (questions.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-gray-500">Belum ada soal.</td></tr>`; return; }
             tbody.innerHTML = questions.map((q) => {
-                const ansLabels = q.answer.map(id => id === 'space' ? 'Spasi' : findAksaraById(id).label).join(', ');
-                return `<tr class="border-b"><td class="py-2 px-4 font-bold">${q.text}</td><td class="py-2 px-4 text-gray-600">${ansLabels}</td><td class="py-2 px-4 text-center"><button onclick="deleteQuestion('${q.id}')" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                const ansLabels = (q.answer || []).map(id => id === 'space' ? 'Spasi' : findAksaraById(id).label).join(', ');
+                return `<tr class="border-b"><td class="py-2 px-4 font-bold">${q.text}</td><td class="py-2 px-4 text-gray-600">${ansLabels}</td><td class="py-2 px-4 text-center"><button onclick="window.deleteQuestion('${q.id}')" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             }).join('');
         }
 
-        window.switchTab = function(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${tab}`)?.classList.add('active');
-            ['quiz', 'leaderboard', 'admin'].forEach(t => document.getElementById(`section-${t}`).classList.add('hidden'));
-            document.getElementById(`section-${tab}`).classList.remove('hidden');
-        };
+        function createAksaraButton(item, isAdmin = false) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn-aksara flex flex-col items-center justify-center p-2 text-center';
+            btn.setAttribute('draggable', 'true');
+            
+            btn.addEventListener('dragstart', (event) => {
+                window.handleDragStart(event, item);
+            });
+            
+            btn.addEventListener('click', () => {
+                if (isAdmin) {
+                    window.addTileToAdminBoard(item.id, item.label, item.imgId, item.type);
+                } else {
+                    window.addTileToBoard(item.id, item.label, false, item.imgId, item.type);
+                }
+            });
+            
+            btn.innerHTML = `
+                <img src="${getDriveUrl(item.imgId)}" onerror="this.onerror=null; this.src='${getFallbackUrl(item.imgId)}';" alt="" class="h-9 w-9 object-contain pointer-events-none" referrerpolicy="no-referrer">
+            `;
+            return btn;
+        }
 
-        function initKeyboard() { /* Logika Pembuatan Keyboard (Disingkat untuk ukuran file, format sama dengan file yang Anda miliki) */ }
+        function initKeyboard() {
+            const indukContainer = document.getElementById('keyboard-induk');
+            const atasContainer = document.getElementById('keyboard-atas');
+            const bawahContainer = document.getElementById('keyboard-bawah');
+            const sampingContainer = document.getElementById('keyboard-samping');
+            const adminContainer = document.getElementById('admin-keyboard');
+
+            if (indukContainer) {
+                indukContainer.innerHTML = '';
+                aksaraData.induk.forEach(item => indukContainer.appendChild(createAksaraButton(item)));
+            }
+            if (atasContainer) {
+                atasContainer.innerHTML = '';
+                aksaraData.atas.forEach(item => atasContainer.appendChild(createAksaraButton(item)));
+            }
+            if (bawahContainer) {
+                bawahContainer.innerHTML = '';
+                aksaraData.bawah.forEach(item => bawahContainer.appendChild(createAksaraButton(item)));
+            }
+            if (sampingContainer) {
+                sampingContainer.innerHTML = '';
+                aksaraData.samping.forEach(item => sampingContainer.appendChild(createAksaraButton(item)));
+            }
+
+            if (adminContainer) {
+                adminContainer.innerHTML = '';
+                [...aksaraData.induk, ...aksaraData.atas, ...aksaraData.bawah, ...aksaraData.samping].forEach(item => {
+                    adminContainer.appendChild(createAksaraButton(item, true));
+                });
+            }
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             initKeyboard();
-            if (GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
+            if (GOOGLE_SHEETS_URL && GOOGLE_SHEETS_URL !== 'URL_DEPLOY_APPS_SCRIPT_ANDA_DISINI') {
                 fetchLeaderboard();
                 fetchQuestions();
             } else {
@@ -660,9 +1091,6 @@
                 renderAdminQuestionList();
             }
         });
-        
-        // --- MODAL UTILS ---
-        window.showModal = function(title, message, type) { /* ... */ }; window.closeModal = function() { /* ... */ }; window.handleEnter = function(e, action) { if(e.key === 'Enter') action(); };
     </script>
 </body>
 </html>
