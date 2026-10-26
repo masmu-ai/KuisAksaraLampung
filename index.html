@@ -488,10 +488,32 @@
             const activeQuestions = (questions && questions.length > 0) ? questions : defaultQuestions;
             if (currentQuestionIndex >= activeQuestions.length) return;
             const q = activeQuestions[currentQuestionIndex];
-            const userKeys = currentAnswer.map(t => t.id);
             const correctKeys = q.answer || [];
 
-            const isCorrect = userKeys.length === correctKeys.length && userKeys.every((val, idx) => val === correctKeys[idx]);
+            // Memvalidasi berdasarkan Suku Kata (Syllable), bukan urutan array mentah
+            const userSyls = groupTilesIntoSyllables(currentAnswer);
+            const correctTiles = correctKeys.map(id => findAksaraById(id));
+            const correctSyls = groupTilesIntoSyllables(correctTiles);
+
+            let isCorrect = false;
+            
+            // Cek jumlah suku kata / spasi yang dibuat harus sama dengan kunci
+            if (userSyls.length === correctSyls.length) {
+                isCorrect = userSyls.every((uSyl, idx) => {
+                    const cSyl = correctSyls[idx];
+                    
+                    if (uSyl.isSpace !== cSyl.isSpace) return false;
+                    if (uSyl.isSpace && cSyl.isSpace) return true; // Sama-sama spasi = benar
+                    
+                    // Bandingkan isi per komponen (Induk, Atas, Bawah, Samping)
+                    const matchInduk = (uSyl.induk ? uSyl.induk.id : null) === (cSyl.induk ? cSyl.induk.id : null);
+                    const matchAtas = (uSyl.atas ? uSyl.atas.id : null) === (cSyl.atas ? cSyl.atas.id : null);
+                    const matchBawah = (uSyl.bawah ? uSyl.bawah.id : null) === (cSyl.bawah ? cSyl.bawah.id : null);
+                    const matchSamping = (uSyl.samping ? uSyl.samping.id : null) === (cSyl.samping ? cSyl.samping.id : null);
+                    
+                    return matchInduk && matchAtas && matchBawah && matchSamping;
+                });
+            }
 
             if (isCorrect) {
                 currentUser.score += 20;
